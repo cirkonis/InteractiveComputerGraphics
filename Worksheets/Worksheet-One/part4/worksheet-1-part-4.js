@@ -6,12 +6,19 @@ function init() {
     alert("Unable to initialize WebGL. Your browser or machine may not support it.");
     return;
   }
-   
-
-var white = vec3(1.0, 1.0, 1.0);
 
   program = initShaders(gl, "vertex-shader", "fragment-shader");
   gl.useProgram(program);
+
+  var thetaLocation = gl.getUniformLocation(program, "theta");
+  var theta = 0.0;
+
+  function tick() {
+    theta += 0.1;
+    gl.uniform1f(thetaLocation, theta);
+    render(gl, numPoints);
+    requestAnimationFrame(tick);
+  }
 
   var triangles = 
           [vec2(-0.5, 0.5), vec2(.5, .5), vec2(0.5,-0.5), vec2(-0.5, -0.5), vec2(-0.5, 0.5), vec2(0.5, -0.5)];
@@ -26,9 +33,11 @@ var white = vec3(1.0, 1.0, 1.0);
   gl.vertexAttribPointer(vPosition, 2, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(vPosition);
 
-
-  var colors=
-          [white,  white, white, white, white, white, white];
+  var white = vec3(1.0, 1.0, 1.0);
+  var colors= [];
+  for (let i = 0; i < numPoints; i++){
+        colors.push(white);
+  }
 
   var cBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, cBuffer);
@@ -41,7 +50,6 @@ var white = vec3(1.0, 1.0, 1.0);
 
 
 
-  
   render();
 
 
@@ -50,13 +58,7 @@ function render()
    gl.viewport(0, 0, canvas.width, canvas.height);
    gl.clearColor(0.3921, 0.5843, 0.9294, 1.0);
    gl.clear(gl.COLOR_BUFFER_BIT);
-   gl.drawArrays(gl.TRIANGLES, 0 , numPoints);
-
-}
-
-
-
-
-
+   gl.drawArrays(gl.TRIANGLES, 0 , numPoints);}
+   tick();
 }
 window.onload = init;
