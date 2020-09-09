@@ -39,8 +39,6 @@ function init() {
         gl.uniform1f(thetaLocation, theta);
         uppyDowny();
         translateY += (translationSpeed * direction);
-        console.log(translateY);
-        console.log(direction);
         gl.uniform1f(translateLocation, translateY);
         render(gl, numPoints);
         requestAnimationFrame(tick);
