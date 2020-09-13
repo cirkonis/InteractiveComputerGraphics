@@ -20,23 +20,26 @@ function init() {
     gl.vertexAttribPointer(vPosition, 2, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(vPosition);
 
-    canvas.addEventListener("click", function(event) {
-        var mousePosition = vec2((2*event.clientX/canvas.width) - 1, (2*(canvas.height - event.clientY)/canvas.height) - 1);
-        gl.bufferSubData(gl.ARRAY_BUFFER, sizeof['vec2']*index, flatten(mousePosition));
+    canvas.addEventListener("click", function (event) {
+        var mousePosition = vec2((2 * event.clientX / canvas.width) - 1, (2 * (canvas.height - event.clientY) / canvas.height) - 1);
+        gl.bufferSubData(gl.ARRAY_BUFFER, sizeof['vec2'] * index, flatten(mousePosition));
         numPoints = Math.max(numPoints, ++index);
         index %= maxVertices;
     });
 
-    gl.bufferData(gl.ARRAY_BUFFER, maxVertices*sizeof['vec2'], gl.STATIC_DRAW);
 
-    render();
+        gl.bufferData(gl.ARRAY_BUFFER, maxVertices * sizeof['vec2'], gl.STATIC_DRAW);
+        render();
+
 
     function render()
     {
         gl.viewport(0, 0, canvas.width, canvas.height);
         gl.clearColor(0.3921, 0.5843, 0.9294, 1.0);
         gl.clear(gl.COLOR_BUFFER_BIT);
-        gl.drawArrays(gl.POINTS, 0 , numPoints);
+        if(numPoints > 0) {
+            gl.drawArrays(gl.POINTS, 0, numPoints);
+        }
         window.requestAnimFrame(render, canvas);
     }
 }
