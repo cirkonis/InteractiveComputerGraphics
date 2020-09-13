@@ -27,8 +27,15 @@ function init() {
         index %= maxVertices;
     });
 
+    clearButton = document.getElementById("clearButton");
+    clearButton.addEventListener("click", function(){
+        index = 0;
+        numPoints = 0;
+        render();
+    });
 
         gl.bufferData(gl.ARRAY_BUFFER, maxVertices * sizeof['vec2'], gl.STATIC_DRAW);
+
         render();
 
 
