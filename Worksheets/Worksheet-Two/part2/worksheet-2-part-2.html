@@ -1,16 +1,21 @@
 <html>
 <head>
     <script id="vertex-shader" type="x-shader/x-vertex">
+        precision mediump float;
 		attribute vec4 vPosition;
+		attribute vec4 vColor;
+		varying vec4 fColor;
  		void main() {
  		gl_Position = vPosition;
  		gl_PointSize = 20.0;
+ 		fColor = vColor;
  		}
  </script>
     <script id="fragment-shader" type="x-shader/x-fragment">
   	precision mediump float;
+  	varying vec4 fColor;
  	void main() {
- 	gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+ 	gl_FragColor = fColor;
  }
  </script>
     <script type="text/javascript" src="../../../Common/initShaders.js"></script>
@@ -22,7 +27,7 @@
 <body>
 <canvas id="my-canvas" width="512" height="512">
 </canvas>
-<select id = "colorMenu" size = "8">
+<select id = "colorMenu" size = "9">
 <option value = "0">Cornflower</option>
 <option value = "1">Red</option>
 <option value = "2">Yellow</option>
@@ -30,10 +35,12 @@
 <option value = "4">Blue</option>
 <option value = "5">Magenta</option>
 <option value = "6">Cyan</option>
-<option value = "7">Black</option>
+<option value = "7" selected = "selected">Black</option>
+<option value = "8">White</option>
+
 </select>
 <select id = "clearColor" size = 1>
-<option value = "0">Cornflower</option>
+<option value = "0" selected = "selected">Cornflower</option>
 <option value = "1">Red</option>
 <option value = "2">Yellow</option>
 <option value = "3">Green</option>
@@ -41,6 +48,7 @@
 <option value = "5">Magenta</option>
 <option value = "6">Cyan</option>
 <option value = "7">Black</option>
+<option value = "8">White</option>
 </select>
 <button id = "clearButton">Clear Canvas</button>
 <h1>WORKSHEET 2.2</h1>
