@@ -27,6 +27,7 @@
 <body>
 <canvas id="my-canvas" width="512" height="512">
 </canvas>
+<span></span>
 <select id = "colorMenu" size = "9">
     <option value = "0">Cornflower</option>
     <option value = "1">Red</option>
@@ -37,7 +38,6 @@
     <option value = "6">Cyan</option>
     <option value = "7" selected = "selected">Black</option>
     <option value = "8">White</option>
-
 </select>
 <select id = "clearColor" size = 1>
     <option value = "0" selected = "selected">Cornflower</option>
@@ -50,12 +50,20 @@
     <option value = "7">Black</option>
     <option value = "8">White</option>
 </select>
-<div>
-    <input id = "centerMode" type="checkbox">
-    <span id = "centerModeText">Center Mode</span>
-    <button id = "clearButton">Clear Canvas</button>
-</div>
 
+<div>
+<!-- Yeah yeah yeah suuuuuuper janky spacing but i'm either doing all css or no css :D -->
+    <input id = "centerMode" type="checkbox">
+    <span id = "centerModeText">Center Mode &emsp;</span>
+    <input id = "pointMode" type ="checkBox">
+    <span id = "pointModeText">Draw Points &ensp;</span>
+    <input id = "triangleMode" type="checkbox">
+    <span id = "triangleModeText">Draw Triangles &ensp;</span>
+    <input id = "circleMode" type ="checkBox">
+    <span id = "circleModeText">Draw Circles &ensp;</span>
+    <span id ="color">&nbsp;&nbsp; Color &ensp;&nbsp;&ensp;</span>
+    <button id = "clearButton">Clear Color</button>
+</div>
 <h1>WORKSHEET 2.3</h1>
 </body>
 </html>

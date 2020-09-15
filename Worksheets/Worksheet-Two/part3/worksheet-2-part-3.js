@@ -35,8 +35,30 @@ function init() {
     var numPoints = 0;
     var selectedColor = document.getElementById("colorMenu");
     var centerMode = document.getElementById("centerMode");
-    console.log(centerMode);
     var offset = 0;
+    var pointMode = document.getElementById("pointMode");
+    var triangleMode = document.getElementById("triangleMode");
+    var circleMode = document.getElementById("circleMode");
+    pointMode.checked = true;
+
+    pointMode.addEventListener("change", function(){
+        if(pointMode.checked === true){
+            triangleMode.checked = false;
+            circleMode.checked = false;
+        }
+    });
+    triangleMode.addEventListener("change", function(){
+        if(triangleMode.checked === true){
+            pointMode.checked = false;
+            circleMode.checked = false;
+        }
+    });
+    circleMode.addEventListener("change", function(){
+        if(circleMode.checked === true){
+            triangleMode.checked = false;
+            pointMode.checked = false;
+        }
+    });
 
     canvas.addEventListener("click", function (event) {
         // some magic numbers but it does what it does
@@ -50,7 +72,7 @@ function init() {
         gl.bufferSubData(gl.ARRAY_BUFFER, sizeof['vec4'] * index, flatten(currentColor));
         numPoints = Math.max(numPoints, ++index);
         index %= maxVertices;
-
+        modeChecker();
     });
     gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
     gl.vertexAttribPointer(vPosition, 2, gl.FLOAT, false, 0, 0);
@@ -79,7 +101,9 @@ function init() {
         gl.viewport(0, 0, canvas.width, canvas.height);
         gl.clear(gl.COLOR_BUFFER_BIT);
         if(numPoints > 0) {
-            gl.drawArrays(gl.POINTS, 0, numPoints);
+            if(1 == 1) {
+                gl.drawArrays(gl.POINTS, 0, numPoints);
+            }
         }
         window.requestAnimFrame(render);
     }
