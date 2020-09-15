@@ -34,9 +34,14 @@ function init() {
     var index = 0;
     var numPoints = 0;
     var selectedColor = document.getElementById("colorMenu");
+    var centerMode = document.getElementById("centerMode");
+    console.log(centerMode);
+    var offset = 0;
 
     canvas.addEventListener("click", function (event) {
-        var mousePosition = vec2((2 * event.clientX / canvas.width) - 1, (2 * (canvas.height - event.clientY) / canvas.height) - 1);
+        // some magic numbers but it does what it does
+        if(centerMode.checked === true){offset = .036;}else{offset = 0;};
+        var mousePosition = vec2((2 * event.clientX / canvas.width) - (.9999 + offset), (2 * (canvas.height - event.clientY) / canvas.height) - (.99 - offset));
         var currentColor = colors[selectedColor.selectedIndex];
         gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
         gl.bufferSubData(gl.ARRAY_BUFFER, sizeof['vec2'] * index, flatten(mousePosition));

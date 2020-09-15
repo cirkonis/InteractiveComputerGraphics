@@ -7,7 +7,7 @@
 		varying vec4 fColor;
  		void main() {
  		gl_Position = vPosition;
- 		gl_PointSize = 20.0;
+ 		gl_PointSize = 15.0;
  		fColor = vColor;
  		}
  </script>
@@ -50,7 +50,12 @@
     <option value = "7">Black</option>
     <option value = "8">White</option>
 </select>
-<button id = "clearButton">Clear Canvas</button>
+<div>
+    <input id = "centerMode" type="checkbox">
+    <span id = "centerModeText">Center Mode</span>
+    <button id = "clearButton">Clear Canvas</button>
+</div>
+
 <h1>WORKSHEET 2.3</h1>
 </body>
 </html>
