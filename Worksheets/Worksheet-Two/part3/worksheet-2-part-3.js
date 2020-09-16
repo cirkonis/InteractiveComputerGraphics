@@ -20,7 +20,6 @@ function init() {
     ];
     var initialBgColor = colors[0];
     gl.clearColor(initialBgColor[0], initialBgColor[1], initialBgColor[2], initialBgColor[3]);
-    colsArray = [];
 
     program = initShaders(gl, "vertex-shader", "fragment-shader");
     gl.useProgram(program);
@@ -29,17 +28,22 @@ function init() {
     var vPosition = gl.getAttribLocation(program, "vPosition");
     var cBuffer = gl.createBuffer();
     var vColor = gl.getAttribLocation(program, "vColor");
-
     var maxVertices = 1000;
     var index = 0;
-    var numPoints = 0;
     var selectedColor = document.getElementById("colorMenu");
     var centerMode = document.getElementById("centerMode");
     var offset = 0;
     var pointMode = document.getElementById("pointMode");
     var triangleMode = document.getElementById("triangleMode");
     var circleMode = document.getElementById("circleMode");
-    pointMode.checked = true;
+    var points = [];
+    var pointIndex = 0;
+    var triangles = [];
+    var triangleIndex = 0;
+    var cornerCounter = 1;
+    var triangleCounter = 0;
+
+    triangleMode.checked = true;
 
     pointMode.addEventListener("change", function(){
         if(pointMode.checked === true){
@@ -61,25 +65,42 @@ function init() {
     });
 
     canvas.addEventListener("click", function (event) {
-        // some magic numbers but it does what it does
-        if(centerMode.checked === true){offset = .036;}else{offset = 0;};
-        var mousePosition = vec2((2 * event.clientX / canvas.width) - (.9999 + offset), (2 * (canvas.height - event.clientY) / canvas.height) - (.99 - offset));
-        var currentColor = colors[selectedColor.selectedIndex];
-        gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
-        gl.bufferSubData(gl.ARRAY_BUFFER, sizeof['vec2'] * index, flatten(mousePosition));
+        // some magic numbers but it does what it does and what it needs to do
+        if(centerMode.checked === true){offset = .034;}else{offset = 0;};
 
-        gl.bindBuffer(gl.ARRAY_BUFFER, cBuffer);
-        gl.bufferSubData(gl.ARRAY_BUFFER, sizeof['vec4'] * index, flatten(currentColor));
-        numPoints = Math.max(numPoints, ++index);
-        index %= maxVertices;
-        modeChecker();
+        if(pointMode.checked === true) {
+         points.push(index);
+         console.log(points);
+         bufferCycle(getMousePosition(offset, event), colors[selectedColor.selectedIndex]);
+
+        }
+
+        if(triangleMode.checked === true){
+            if(cornerCounter %= 3 !== 0) {
+                triangles.push(index);
+                bufferCycle(getMousePosition(offset, event), colors[selectedColor.selectedIndex]);
+                console.log("triangles: " + triangles);
+                console.log("triangles length: " + triangles.length);
+
+            }else{
+                triangles.push(index);
+                bufferCycle(getMousePosition(offset, event), colors[selectedColor.selectedIndex]);
+                triangleCounter++;
+                console.log("triangles: " + triangles);
+                console.log("triangles length: " + triangles.length);
+            }
+            cornerCounter++;
+            console.log(cornerCounter);
+        }
     });
+
+
     gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
     gl.vertexAttribPointer(vPosition, 2, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(vPosition);
     gl.bufferData(gl.ARRAY_BUFFER, maxVertices * sizeof['vec2'], gl.STATIC_DRAW);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, cBuffer)
+    gl.bindBuffer(gl.ARRAY_BUFFER, cBuffer);
     gl.vertexAttribPointer(vColor, 4, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(vColor);
     gl.bufferData(gl.ARRAY_BUFFER, maxVertices * sizeof['vec4'], gl.STATIC_DRAW);
@@ -89,8 +110,6 @@ function init() {
     clearButton.addEventListener("click", function(){
         backGroundColor = colors[clearMenu.selectedIndex];
         index = 0;
-        numPoints = 0;
-        colsArray = [];
         gl.clearColor(backGroundColor[0], backGroundColor[1], backGroundColor[2], backGroundColor[3]);
     });
 
@@ -100,13 +119,26 @@ function init() {
     {
         gl.viewport(0, 0, canvas.width, canvas.height);
         gl.clear(gl.COLOR_BUFFER_BIT);
-        if(numPoints > 0) {
-            if(1 == 1) {
-                gl.drawArrays(gl.POINTS, 0, numPoints);
+            if (points.length > 0) {
+                 gl.drawArrays(gl.POINTS, 0, points.length);
             }
-        }
+            if (triangles.length > 0) {
+               gl.drawArrays(gl.TRIANGLES, 0, triangles.length);
+            }
+
         window.requestAnimFrame(render);
     }
 
+    function getMousePosition(offset, event){
+        return vec2((2 * event.clientX / canvas.width) - (.9999 + offset), (2 * (canvas.height - event.clientY) / canvas.height) - (.99 - offset));
+    }
+
+    function bufferCycle(vertexVector, colorVector){
+        gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
+        gl.bufferSubData(gl.ARRAY_BUFFER, sizeof['vec2'] * index, flatten(vertexVector));
+        gl.bindBuffer(gl.ARRAY_BUFFER, cBuffer);
+        gl.bufferSubData(gl.ARRAY_BUFFER, sizeof['vec4'] * index, flatten(colorVector));
+        index++;
+    }
 }
 window.onload = init;
